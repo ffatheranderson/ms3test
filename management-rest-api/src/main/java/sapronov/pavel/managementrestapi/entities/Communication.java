@@ -11,16 +11,27 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Data
-//@Entity
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 public class Communication {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonIgnore
     Long id;
 
     String type;
     String value;
     Boolean preferred;
+
+    public Communication(String type, String value) {
+        this.type = type;
+        this.value = value;
+    }
+
+    public Communication(String type, String value, Boolean preferred) {
+        this.type = type;
+        this.value = value;
+        this.preferred = preferred;
+    }
 }

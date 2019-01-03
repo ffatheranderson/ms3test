@@ -8,16 +8,15 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
-//@Entity
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 public class Identification {
-    //    @Id
-//    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonIgnore
     Long id;
 
@@ -28,13 +27,26 @@ public class Identification {
     String title;
 
     @JsonIgnore
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     Set<Address> addresses;
     @JsonIgnore
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     Set<Communication> communications;
 
     public enum Gender {
         M, F;
+    }
+
+    public Identification(String firstName, String lastName, LocalDate dob,
+                          Gender gender, String title,
+                          Set<Address> addresses,
+                          Set<Communication> communications) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dob = dob;
+        this.gender = gender;
+        this.title = title;
+        this.addresses = addresses;
+        this.communications = communications;
     }
 }
