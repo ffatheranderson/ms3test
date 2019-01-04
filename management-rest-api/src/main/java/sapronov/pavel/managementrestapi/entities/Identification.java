@@ -4,6 +4,7 @@ package sapronov.pavel.managementrestapi.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -27,10 +28,12 @@ public class Identification {
     String title;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "identification")
+    @EqualsAndHashCode.Exclude
     Set<Address> addresses;
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "identification")
+    @EqualsAndHashCode.Exclude
     Set<Communication> communications;
 
     public enum Gender {

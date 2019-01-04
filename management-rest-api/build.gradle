@@ -28,14 +28,23 @@ repositories {
     maven { url "https://repo.spring.io/milestone" }
 }
 
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+}
 
 dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas'
+//    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-rest'
+
     implementation group: 'org.hsqldb', name: 'hsqldb', version: '2.4.1'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-rest'
+
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.4'
+    developmentOnly group: 'org.springframework.boot', name: 'spring-boot-devtools'
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 }

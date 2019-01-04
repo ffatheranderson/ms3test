@@ -1,4 +1,4 @@
-package sapronov.pavel.managementrestapi.utils;
+package sapronov.pavel.managementrestapi.configuration;
 
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -37,12 +37,16 @@ public class DataBaseInitializer {
         Communication bobMarleyComm1 = new Communication("Cell phone", "123", true);
         Communication bobMarleyComm2 = new Communication("email", "bobmarley@haven.org", false);
 
-
-        em.merge(new Identification("Bob", "Marley",
+        Identification bobMarley = new Identification("Bob", "Marley",
                 LocalDate.of(1945, FEBRUARY, 6),
                 M, "Singer",
                 Set.of(bobMarleysAddress1, bobMarleysAddress2),
-                Set.of(bobMarleyComm1, bobMarleyComm2)));
+                Set.of(bobMarleyComm1, bobMarleyComm2));
+
+        bobMarleysAddress1.setIdentification(bobMarley);
+        bobMarleysAddress2.setIdentification(bobMarley);
+
+        em.merge(bobMarley);
 
 
         Address jackieChansAddress1 = new Address("Home", 2, "Jackie's Some street",
@@ -52,11 +56,16 @@ public class DataBaseInitializer {
         Communication jackieChansComm1 = new Communication("Cell phone", "345", false);
         Communication jackieChansComm2 = new Communication("email", "jackiechan@china.gov", true);
 
-        em.merge(new Identification("Jackie", "Chan",
+        Identification jackieChan = new Identification("Jackie", "Chan",
                 LocalDate.of(1954, APRIL, 7),
                 M, "Actor",
                 Set.of(jackieChansAddress1, jackieChansAddress2),
-                Set.of(jackieChansComm1, jackieChansComm2)));
+                Set.of(jackieChansComm1, jackieChansComm2));
+
+        jackieChansAddress1.setIdentification(jackieChan);
+        jackieChansAddress2.setIdentification(jackieChan);
+
+        em.merge(jackieChan);
     }
 
 }
