@@ -9,6 +9,7 @@ import javax.persistence.*;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder(toBuilder = true)
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,20 +31,18 @@ public class Address {
     Identification identification;
 
     public Address(String type, Integer number, String street, String unit, String city, String state,
+                   String zipCode, Identification identification) {
+        this(null, type, number, street, unit, city, state, zipCode, identification);
+    }
+
+    public Address(Long id, String type, Integer number, String street, String unit, String city, String state,
                    String zipCode) {
-        this(type, number, street, unit, city, state, zipCode, null);
+        this(id, type, number, street, unit, city, state, zipCode, null);
     }
 
     public Address(String type, Integer number, String street, String unit, String city, String state,
-                   String zipCode, Identification identification) {
-        this.type = type;
-        this.number = number;
-        this.street = street;
-        this.unit = unit;
-        this.city = city;
-        this.state = state;
-        this.zipCode = zipCode;
-        this.identification = identification;
+                   String zipCode) {
+        this(null, type, number, street, unit, city, state, zipCode, null);
     }
 
     public void setAllPrimitiveFieldsFrom(Address that) {

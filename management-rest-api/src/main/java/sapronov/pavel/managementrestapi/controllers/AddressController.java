@@ -1,9 +1,5 @@
 package sapronov.pavel.managementrestapi.controllers;
 
-import jdk.jshell.spi.ExecutionControl;
-import org.apache.commons.lang3.NotImplementedException;
-import org.apache.coyote.Response;
-import org.hibernate.cfg.SetSimpleValueTypeSecondPass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.Resource;
@@ -42,12 +38,11 @@ public class AddressController {
     private static final String IDENTIFICATION_HAS_NOT_FOUND = "Identification with id: %s has not found.";
     private static final String ADDRESS_HAS_NOT_FOUND = "Address with id: %s has not found.";
 
-    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    @GetMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Resources<Resource<Address>>> getAddresses(@PathVariable Long identId) {
         Set<Resource<Address>> addresses =
                 identRepo.findById(identId).map(Identification::getAddresses).orElse(Collections.emptySet()).stream()
                          .map(addressAsm::toResource).collect(Collectors.toSet());
-
 
         if (!addresses.isEmpty())
             return ResponseEntity.ok(new Resources<>(addresses,
@@ -55,7 +50,7 @@ public class AddressController {
         else return ResponseEntity.notFound().build();
     }
 
-    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaTypes.HAL_JSON_VALUE})
     public ResponseEntity<?> addAddressToIdentification(@PathVariable Long identId, @RequestBody Address newAddress) {
 
         Optional<Identification> identificationOpt = identRepo.findById(identId);
@@ -74,7 +69,7 @@ public class AddressController {
         }
     }
 
-    @GetMapping(value = "/{addrId}", produces = MediaTypes.HAL_JSON_VALUE)
+    @GetMapping(value = "/{addrId}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Resource<Address>> getAddress(@PathVariable Long identId, @PathVariable Long addrId) {
         Optional<Resource<Address>> addressResource =
                 identRepo.findById(identId).map(Identification::getAddresses).orElse(Collections.emptySet()).stream()
@@ -83,58 +78,65 @@ public class AddressController {
         return ResponseEntity.of(addressResource);
     }
 
-    @RequestMapping(value = "/{addrId}", method = {RequestMethod.PUT, RequestMethod.PATCH}
-            , consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity putAddress(@PathVariable Long identId,
-                                     @PathVariable Long addrId,
-                                     @RequestBody Address updatedAddress,
-                                     HttpServletRequest request) {
+    @RequestMapping(value = "/{addrId}"
+            , method = {RequestMethod.PUT, RequestMethod.PATCH}
+            , consumes = {MediaType.APPLICATION_JSON_VALUE, MediaTypes.HAL_JSON_VALUE}
+            , produces = MediaType.TEXT_HTML_VALUE)
+    public ResponseEntity putAddress(@PathVariable Long identId
+            , @PathVariable Long addrId
+            , @RequestBody Address updatedAddress
+            , HttpServletRequest request) {
+
         Optional<Identification> identOpt = identRepo.findById(identId);
 
         if (identOpt.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).contentType(MediaType.TEXT_HTML)
                                  .body(String.format(IDENTIFICATION_HAS_NOT_FOUND, identId));
         else {
             Optional<Address> addrOpt =
                     identOpt.get().getAddresses().stream().filter(a -> a.getId().equals(addrId)).findAny();
 
             if (addrOpt.isEmpty())
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).contentType(MediaType.TEXT_HTML)
                                      .body(String.format(ADDRESS_HAS_NOT_FOUND, addrId));
             else {
                 Address address = addrOpt.get();
 
-                if (equalsIgnoreCase("PUT", request.getMethod()))
-                    address.setAllPrimitiveFieldsFrom(updatedAddress);
-                else address.setAllPrimitiveNotNullFieldsFrom(updatedAddress);
+                Address newAddressClone = address.toBuilder().build();
 
-                addrRepo.save(address);
-                return ResponseEntity.status(HttpStatus.OK).header("location",
-                        linkTo(methodOn(AddressController.class).getAddress(identId, addrId)).toUri().toASCIIString())
-                                     .build();
+                if (equalsIgnoreCase("PUT", request.getMethod()))
+                    newAddressClone.setAllPrimitiveFieldsFrom(updatedAddress);
+                else newAddressClone.setAllPrimitiveNotNullFieldsFrom(updatedAddress);
+
+                Address savedAddress = addrRepo.save(newAddressClone);
+                return ResponseEntity.status(HttpStatus.OK).header("Location",
+                        linkTo(methodOn(AddressController.class)
+                                .getAddress(identId, savedAddress.getId())).toUri().toASCIIString()).build();
             }
         }
     }
 
-    @DeleteMapping(value = "/{addrId}")
+    @DeleteMapping(value = "/{addrId}", produces = MediaType.TEXT_HTML_VALUE)
     public ResponseEntity deleteAddress(@PathVariable Long identId, @PathVariable Long addrId) {
         Optional<Identification> identOpt = identRepo.findById(identId);
 
         if (identOpt.isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                 .contentType(MediaType.TEXT_HTML)
                                  .body(String.format(IDENTIFICATION_HAS_NOT_FOUND, identId));
         else {
             Identification identification = identOpt.get();
-            Set<Address> addressesAfterFiltering =
-                    identification.getAddresses().stream().filter(a -> !a.getId().equals(addrId))
-                                  .collect(Collectors.toSet());
+            Optional<Address> addressForRemove =
+                    identification.getAddresses().stream().filter(a -> a.getId().equals(addrId)).findAny();
 
-            if (identification.getAddresses().size() > addressesAfterFiltering.size()) {
-                identification.setAddresses(addressesAfterFiltering);
+            if (addressForRemove.isPresent()) {
+                identification.getAddresses().remove(addressForRemove.get());
                 identRepo.save(identification);
                 return ResponseEntity.ok().build();
             } else
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format(ADDRESS_HAS_NOT_FOUND, addrId));
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                     .contentType(MediaType.TEXT_HTML)
+                                     .body(String.format(ADDRESS_HAS_NOT_FOUND, addrId));
 
         }
     }

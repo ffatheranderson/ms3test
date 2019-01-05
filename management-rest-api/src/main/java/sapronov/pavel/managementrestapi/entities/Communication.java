@@ -9,6 +9,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder(toBuilder = true)
 public class Communication {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,9 +26,12 @@ public class Communication {
     @ToString.Exclude
     Identification identification;
 
+
+    public Communication(Long id, String type, String value, Boolean preferred) {
+        this(id, type, value, preferred, null);
+    }
+
     public Communication(String type, String value, Boolean preferred) {
-        this.type = type;
-        this.value = value;
-        this.preferred = preferred;
+        this(null, type, value, preferred, null);
     }
 }

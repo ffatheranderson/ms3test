@@ -2,10 +2,7 @@ package sapronov.pavel.managementrestapi.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -15,6 +12,7 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder(toBuilder = true)
 public class Identification {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,11 +26,11 @@ public class Identification {
     String title;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "identification")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "identification", orphanRemoval = true)
     @EqualsAndHashCode.Exclude
     Set<Address> addresses;
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "identification")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "identification", orphanRemoval = true)
     @EqualsAndHashCode.Exclude
     Set<Communication> communications;
 
@@ -44,12 +42,6 @@ public class Identification {
                           Gender gender, String title,
                           Set<Address> addresses,
                           Set<Communication> communications) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.dob = dob;
-        this.gender = gender;
-        this.title = title;
-        this.addresses = addresses;
-        this.communications = communications;
+        this(null, firstName, lastName, dob, gender, title, addresses, communications);
     }
 }
