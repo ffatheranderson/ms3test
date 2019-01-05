@@ -246,7 +246,7 @@ public class AddressControllerTest {
            .andExpect(status().isOk());
 
         verify(identRepo, times(1)).findById(5L);
-        verify(addrRepo, times(1)).delete(any());
+        verify(identRepo, times(1)).save(any());
     }
 
     @Test

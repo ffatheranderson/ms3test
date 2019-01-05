@@ -16,6 +16,7 @@ import sapronov.pavel.managementrestapi.resource_assemblers.AddressAssembler;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -130,8 +131,10 @@ public class AddressController {
                     identification.getAddresses().stream().filter(a -> a.getId().equals(addrId)).findAny();
 
             if (addressForRemove.isPresent()) {
-                identification.getAddresses().remove(addressForRemove.get());
-                identRepo.save(identification);
+                Identification clone =
+                        identification.toBuilder().addresses(new HashSet<>(identification.getAddresses())).build();
+                clone.getAddresses().remove(addressForRemove.get());
+                identRepo.save(clone);
                 return ResponseEntity.ok().build();
             } else
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)

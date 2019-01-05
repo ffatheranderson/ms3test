@@ -6,6 +6,8 @@ import sapronov.pavel.managementrestapi.entities.Communication;
 import sapronov.pavel.managementrestapi.entities.Identification;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static java.time.Month.FEBRUARY;
@@ -26,8 +28,8 @@ public class ControllersFixture {
     static final Identification bobMarley = new Identification(5L, "Bob", "Marley",
             LocalDate.of(1945, FEBRUARY, 6),
             M, "Singer",
-            Set.of(bobMarleysAddress1, bobMarleysAddress2),
-            Set.of(bobMarleyComm1, bobMarleyComm2));
+            new HashSet<>(List.of(bobMarleysAddress1, bobMarleysAddress2)),
+            new HashSet<>(List.of(bobMarleyComm1, bobMarleyComm2)));
 
     static final Address jackieChansAddress1 = new Address(6L, "Home", 2, "Jackie's Some street",
             "33g", "Malvern", "PA", "444");
@@ -39,8 +41,8 @@ public class ControllersFixture {
     static final Identification jackieChan = new Identification(10L, "Jackie", "Chan",
             LocalDate.of(1954, APRIL, 7),
             M, "Actor",
-            Set.of(jackieChansAddress1, jackieChansAddress2),
-            Set.of(jackieChansComm1, jackieChansComm2));
+            new HashSet<>(List.of(jackieChansAddress1, jackieChansAddress2)),
+            new HashSet<>(List.of(jackieChansComm1, jackieChansComm2)));
 
     static {
         bobMarleysAddress1.setIdentification(bobMarley);
