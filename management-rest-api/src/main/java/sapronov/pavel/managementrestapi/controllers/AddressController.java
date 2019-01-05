@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +42,7 @@ public class AddressController {
 
     @GetMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Resources<Resource<Address>>> getAddresses(@PathVariable Long identId) {
+
         Set<Resource<Address>> addresses =
                 identRepo.findById(identId).map(Identification::getAddresses).orElse(Collections.emptySet()).stream()
                          .map(addressAsm::toResource).collect(Collectors.toSet());
@@ -72,6 +74,7 @@ public class AddressController {
 
     @GetMapping(value = "/{addrId}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Resource<Address>> getAddress(@PathVariable Long identId, @PathVariable Long addrId) {
+
         Optional<Resource<Address>> addressResource =
                 identRepo.findById(identId).map(Identification::getAddresses).orElse(Collections.emptySet()).stream()
                          .filter(a -> a.getId() == addrId).findAny().map(addressAsm::toResource);
@@ -103,11 +106,8 @@ public class AddressController {
             else {
                 Address address = addrOpt.get();
 
-                Address newAddressClone = address.toBuilder().build();
-
-                if (equalsIgnoreCase("PUT", request.getMethod()))
-                    newAddressClone.setAllPrimitiveFieldsFrom(updatedAddress);
-                else newAddressClone.setAllPrimitiveNotNullFieldsFrom(updatedAddress);
+                Address newAddressClone =
+                        address.patchOrPut(updatedAddress, HttpMethod.resolve(request.getMethod()));
 
                 Address savedAddress = addrRepo.save(newAddressClone);
                 return ResponseEntity.status(HttpStatus.OK).header("Location",
@@ -119,6 +119,7 @@ public class AddressController {
 
     @DeleteMapping(value = "/{addrId}", produces = MediaType.TEXT_HTML_VALUE)
     public ResponseEntity deleteAddress(@PathVariable Long identId, @PathVariable Long addrId) {
+
         Optional<Identification> identOpt = identRepo.findById(identId);
 
         if (identOpt.isEmpty())

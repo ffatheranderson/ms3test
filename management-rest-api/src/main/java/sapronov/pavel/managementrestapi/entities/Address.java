@@ -2,6 +2,7 @@ package sapronov.pavel.managementrestapi.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import sapronov.pavel.managementrestapi.utils.PatchAndPutReady;
 
 import javax.persistence.*;
 
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
-public class Address {
+public class Address implements PatchAndPutReady<Address> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonIgnore
@@ -45,31 +46,37 @@ public class Address {
         this(null, type, number, street, unit, city, state, zipCode, null);
     }
 
-    public void setAllPrimitiveFieldsFrom(Address that) {
-        this.type = that.type;
-        this.number = that.number;
-        this.street = that.street;
-        this.unit = that.unit;
-        this.city = that.city;
-        this.state = that.state;
-        this.zipCode = that.zipCode;
+    @Override
+    public Address put(Address that) {
+        return this.toBuilder()
+                   .type(that.type)
+                   .number(that.number)
+                   .street(that.street)
+                   .unit(that.unit)
+                   .city(that.city)
+                   .state(that.state)
+                   .zipCode(that.zipCode)
+                   .build();
     }
 
-    public void setAllPrimitiveNotNullFieldsFrom(Address that) {
+    @Override
+    public Address patch(Address that) {
+        AddressBuilder b = this.toBuilder();
         if (that.type != null)
-            this.type = that.type;
+            b.type(that.type);
         if (that.number != null)
-            this.number = that.number;
+            b.number(that.number);
         if (that.street != null)
-            this.street = that.street;
+            b.street(that.street);
         if (that.unit != null)
-            this.unit = that.unit;
+            b.unit(that.unit);
         if (that.city != null)
-            this.city = that.city;
+            b.city(that.city);
         if (that.state != null)
-            this.state = that.state;
+            b.state(that.state);
         if (that.zipCode != null)
-            this.zipCode = that.zipCode;
+            b.zipCode(that.zipCode);
+        return b.build();
     }
 
 }
