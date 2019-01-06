@@ -45,9 +45,10 @@ public class DataBaseInitializer {
 
         bobMarleysAddress1.setIdentification(bobMarley);
         bobMarleysAddress2.setIdentification(bobMarley);
+        bobMarleyComm1.setIdentification(bobMarley);
+        bobMarleyComm2.setIdentification(bobMarley);
 
         em.merge(bobMarley);
-
 
         Address jackieChansAddress1 = new Address("Home", 2, "Jackie's Some street",
                 "33g", "Malvern", "PA", "444");
@@ -64,6 +65,8 @@ public class DataBaseInitializer {
 
         jackieChansAddress1.setIdentification(jackieChan);
         jackieChansAddress2.setIdentification(jackieChan);
+        jackieChansComm1.setIdentification(jackieChan);
+        jackieChansComm2.setIdentification(jackieChan);
 
         em.merge(jackieChan);
     }
