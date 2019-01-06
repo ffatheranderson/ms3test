@@ -67,7 +67,7 @@ public class Identification implements PatchAndPutReady<Identification> {
     }
 
     public enum Gender {
-        M, F;
+        M, F
     }
 
     public Identification(String firstName, String lastName, LocalDate dob,
