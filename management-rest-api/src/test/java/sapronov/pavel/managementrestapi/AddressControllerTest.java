@@ -59,8 +59,9 @@ public class AddressControllerTest {
            .andDo(print())
            .andExpect(status().isOk())
            .andExpect(jsonPath("$._embedded.addressList", hasSize(2)))
-           .andExpect(jsonPath("$._embedded.addressList[0].type", equalTo("Home")))
-           .andExpect(jsonPath("$._embedded.addressList[1].type", equalTo("Work")));
+           .andExpect(jsonPath("$._embedded.addressList[0].type", notNullValue()))
+           .andExpect(jsonPath("$._embedded.addressList[1].type", notNullValue()));
+        verify(identRepo).findById(5L);
     }
 
     @Test

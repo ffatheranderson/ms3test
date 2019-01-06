@@ -56,7 +56,7 @@ public class IdentificationController {
     }
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaTypes.HAL_JSON_VALUE})
-    public ResponseEntity postNewIdentification(@RequestBody Identification newIdentification) {
+    public ResponseEntity createNewIdentification(@RequestBody Identification newIdentification) {
 
         Identification createdIdentification = identRepo.save(newIdentification);
 
@@ -70,7 +70,7 @@ public class IdentificationController {
             , method = {RequestMethod.PUT, RequestMethod.PATCH}
             , consumes = {MediaType.APPLICATION_JSON_VALUE, MediaTypes.HAL_JSON_VALUE}
             , produces = MediaType.TEXT_HTML_VALUE)
-    public ResponseEntity put(@PathVariable Long identId
+    public ResponseEntity updateIdentification(@PathVariable Long identId
             , @RequestBody Identification updatedIdentification
             , HttpServletRequest request) {
 
@@ -95,7 +95,7 @@ public class IdentificationController {
     }
 
     @DeleteMapping(value = "/{identId}", produces = MediaType.TEXT_HTML_VALUE)
-    public ResponseEntity deleteAddress(@PathVariable Long identId) {
+    public ResponseEntity deleteIdentification(@PathVariable Long identId) {
         Optional<Identification> identOpt = identRepo.findById(identId);
 
         if (identOpt.isEmpty())
@@ -104,7 +104,7 @@ public class IdentificationController {
                                  .body(String.format(IDENTIFICATION_HAS_NOT_FOUND, identId));
         else {
             Identification identification = identOpt.get();
-            identRepo.save(identification);
+            identRepo.delete(identification);
             return ResponseEntity.ok().build();
         }
     }

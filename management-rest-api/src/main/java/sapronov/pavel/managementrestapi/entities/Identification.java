@@ -2,7 +2,9 @@ package sapronov.pavel.managementrestapi.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
+import sapronov.pavel.managementrestapi.entities.deserializers_and_serrializers.LocalDateJsonSerializer;
 import sapronov.pavel.managementrestapi.utils.PatchAndPutReady;
 
 import javax.persistence.*;
@@ -22,6 +24,7 @@ public class Identification implements PatchAndPutReady<Identification> {
 
     String firstName;
     String lastName;
+    @JsonSerialize(using = LocalDateJsonSerializer.class)
     LocalDate dob;
     Gender gender;
     String title;

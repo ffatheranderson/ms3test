@@ -53,8 +53,18 @@ public class AddressController {
         else return ResponseEntity.notFound().build();
     }
 
+    @GetMapping(value = "/{addrId}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<Resource<Address>> getAddress(@PathVariable Long identId, @PathVariable Long addrId) {
+
+        Optional<Resource<Address>> addressResource =
+                identRepo.findById(identId).map(Identification::getAddresses).orElse(Collections.emptySet()).stream()
+                         .filter(a -> a.getId() == addrId).findAny().map(addressAsm::toResource);
+
+        return ResponseEntity.of(addressResource);
+    }
+
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaTypes.HAL_JSON_VALUE})
-    public ResponseEntity<?> addAddressToIdentification(@PathVariable Long identId, @RequestBody Address newAddress) {
+    public ResponseEntity<?> createNewAddress(@PathVariable Long identId, @RequestBody Address newAddress) {
 
         Optional<Identification> identificationOpt = identRepo.findById(identId);
         if (identificationOpt.isEmpty())
@@ -72,21 +82,11 @@ public class AddressController {
         }
     }
 
-    @GetMapping(value = "/{addrId}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Resource<Address>> getAddress(@PathVariable Long identId, @PathVariable Long addrId) {
-
-        Optional<Resource<Address>> addressResource =
-                identRepo.findById(identId).map(Identification::getAddresses).orElse(Collections.emptySet()).stream()
-                         .filter(a -> a.getId() == addrId).findAny().map(addressAsm::toResource);
-
-        return ResponseEntity.of(addressResource);
-    }
-
     @RequestMapping(value = "/{addrId}"
             , method = {RequestMethod.PUT, RequestMethod.PATCH}
             , consumes = {MediaType.APPLICATION_JSON_VALUE, MediaTypes.HAL_JSON_VALUE}
             , produces = MediaType.TEXT_HTML_VALUE)
-    public ResponseEntity putAddress(@PathVariable Long identId
+    public ResponseEntity updateAddress(@PathVariable Long identId
             , @PathVariable Long addrId
             , @RequestBody Address updatedAddress
             , HttpServletRequest request) {
