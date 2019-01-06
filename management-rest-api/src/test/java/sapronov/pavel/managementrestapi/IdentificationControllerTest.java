@@ -25,6 +25,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -69,7 +70,7 @@ public class IdentificationControllerTest {
     }
 
     @Test
-    public void testGetAddressesNotFound() throws Exception {
+    public void testGetIdentificationsNotFound() throws Exception {
         given(identRepo.findById(any())).willReturn(Optional.empty());
 
         mvc.perform(get("/identifications").accept(MediaTypes.HAL_JSON_VALUE))
@@ -79,6 +80,26 @@ public class IdentificationControllerTest {
         verify(identRepo).findAll();
     }
 
+    @Test
+    public void testGetIdentificationSuccess() throws Exception {
+        given(identRepo.findById(5L)).willReturn(Optional.of(bobMarley));
+
+        mvc.perform(get("/identifications/5").accept(MediaTypes.HAL_JSON_VALUE))
+           .andDo(print())
+           .andExpect(status().isOk())
+           .andExpect(jsonPath("$.firstName", notNullValue()))
+           .andExpect(jsonPath("$.lastName", notNullValue()))
+           .andExpect(jsonPath("$.dob", notNullValue()))
+           .andExpect(jsonPath("$.gender", notNullValue()))
+           .andExpect(jsonPath("$.title", notNullValue()))
+           .andExpect(jsonPath("$._links", notNullValue()))
+           .andExpect(jsonPath("$._links.self", notNullValue()))
+           .andExpect(jsonPath("$._links.addresses", notNullValue()))
+           .andExpect(jsonPath("$._links.identifications", notNullValue()))
+           .andExpect(jsonPath("$._links.communications", notNullValue()));
+
+        verify(identRepo).findById(5L);
+    }
 
     @Test
     public void testPostNewIdentificationSuccess() throws Exception {

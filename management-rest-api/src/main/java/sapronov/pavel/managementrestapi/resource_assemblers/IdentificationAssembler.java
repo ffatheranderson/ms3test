@@ -4,6 +4,7 @@ import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.stereotype.Component;
 import sapronov.pavel.managementrestapi.controllers.AddressController;
+import sapronov.pavel.managementrestapi.controllers.CommunicationController;
 import sapronov.pavel.managementrestapi.controllers.IdentificationController;
 import sapronov.pavel.managementrestapi.entities.Identification;
 
@@ -17,6 +18,8 @@ public class IdentificationAssembler implements ResourceAssembler<Identification
         return new Resource<>(entity,
                 linkTo(methodOn(IdentificationController.class).getIdentification(entity.getId())).withSelfRel(),
                 linkTo(methodOn(AddressController.class).getAddresses(entity.getId())).withRel("addresses"),
-                linkTo(methodOn(IdentificationController.class).getIdentifications()).withRel("identifications"));
+                linkTo(methodOn(IdentificationController.class).getIdentifications()).withRel("identifications"),
+                linkTo(methodOn(CommunicationController.class).getCommunications(entity.getId()))
+                        .withRel("communications"));
     }
 }
