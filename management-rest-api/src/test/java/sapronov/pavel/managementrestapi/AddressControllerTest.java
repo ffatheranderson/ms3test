@@ -60,7 +60,9 @@ public class AddressControllerTest {
            .andExpect(status().isOk())
            .andExpect(jsonPath("$._embedded.addressList", hasSize(2)))
            .andExpect(jsonPath("$._embedded.addressList[0].type", notNullValue()))
-           .andExpect(jsonPath("$._embedded.addressList[1].type", notNullValue()));
+           .andExpect(jsonPath("$._embedded.addressList[1].type", notNullValue()))
+           .andExpect(jsonPath("$._links", notNullValue()))
+           .andExpect(jsonPath("$._links.self", notNullValue()));
         verify(identRepo).findById(5L);
     }
 
@@ -75,7 +77,7 @@ public class AddressControllerTest {
 
 
     @Test
-    public void testAddAddressToIdentificationSuccess() throws Exception {
+    public void testCreateAddressSuccess() throws Exception {
         given(identRepo.findById(5L)).willReturn(Optional.of(bobMarley));
         given(addrRepo.save(any())).willAnswer(invocation -> {
             Address addr = invocation.getArgument(0);
@@ -99,7 +101,7 @@ public class AddressControllerTest {
     }
 
     @Test
-    public void testAddAddressToIdentificationIdentificationNotFound() throws Exception {
+    public void testCreateAddAddressWhenIdentificationNotFound() throws Exception {
         given(identRepo.findById(any())).willReturn(Optional.empty());
 
         mvc.perform(post("/identifications/5/addresses")
@@ -126,6 +128,8 @@ public class AddressControllerTest {
            .andExpect(jsonPath("$.type", equalTo("Home")))
            .andExpect(jsonPath("$._links.self", notNullValue()))
            .andExpect(jsonPath("$._links.addresses", notNullValue()));
+
+        verify(identRepo).findById(5L);
     }
 
     @Test
@@ -219,6 +223,7 @@ public class AddressControllerTest {
            .andExpect(status().isNotFound())
            .andExpect(content().string(containsString("Identification with id: 11 has not found.")));
 
+        verify(identRepo).findById(11L);
         verify(addrRepo, times(0)).save(any());
     }
 
@@ -234,6 +239,7 @@ public class AddressControllerTest {
            .andExpect(status().isNotFound())
            .andExpect(content().string(containsString("Address with id: 3 has not found.")));
 
+        verify(identRepo).findById(5L);
         verify(addrRepo, times(0)).save(any());
     }
 

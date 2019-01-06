@@ -22,7 +22,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
@@ -64,7 +63,7 @@ public class AddressController {
     }
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaTypes.HAL_JSON_VALUE})
-    public ResponseEntity<?> createNewAddress(@PathVariable Long identId, @RequestBody Address newAddress) {
+    public ResponseEntity createNewAddress(@PathVariable Long identId, @RequestBody Address newAddress) {
 
         Optional<Identification> identificationOpt = identRepo.findById(identId);
         if (identificationOpt.isEmpty())

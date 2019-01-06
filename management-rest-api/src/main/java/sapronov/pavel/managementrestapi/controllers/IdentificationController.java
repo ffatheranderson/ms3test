@@ -33,7 +33,7 @@ public class IdentificationController {
     @Autowired
     private IdentificationAssembler identAsm;
 
-    private static final String IDENTIFICATION_HAS_NOT_FOUND = "Identification with id: %s has not found.";
+    public static final String IDENTIFICATION_HAS_NOT_FOUND = "Identification with id: %s has not found.";
 
     @GetMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Resources<Resource<Identification>>> getIdentifications() {

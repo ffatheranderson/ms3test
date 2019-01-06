@@ -22,7 +22,6 @@ public class ControllersFixture {
     static final Address bobMarleysAddress2 = new Address(2L, "Work", 2, "Some street for work",
             "32f", "Boston", "CI", "12223");
     static final Communication bobMarleyComm1 = new Communication(3L, "Cell phone", "123", true);
-
     static final Communication bobMarleyComm2 = new Communication(4L, "email", "bobmarley@haven.org", false);
 
     static final Identification bobMarley = new Identification(5L, "Bob", "Marley",
@@ -49,6 +48,10 @@ public class ControllersFixture {
         bobMarleysAddress2.setIdentification(bobMarley);
         jackieChansAddress1.setIdentification(jackieChan);
         jackieChansAddress2.setIdentification(jackieChan);
+        bobMarleyComm1.setIdentification(bobMarley);
+        bobMarleyComm2.setIdentification(bobMarley);
+        jackieChansComm1.setIdentification(jackieChan);
+        jackieChansComm2.setIdentification(jackieChan);
     }
 
     public static String asJsonString(final Object obj) {
