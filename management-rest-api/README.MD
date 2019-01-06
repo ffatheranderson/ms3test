@@ -48,7 +48,7 @@ and you should be able to browse this api by jumping between the links api provi
 ### Prerequisites
 
 You have to have JRE (Java Runtime environment) installed(Tested with Open JDK 11). 
-And you have to have internet connection to let gradle to download or required libraries. 
+And you have to have internet connection to let gradle to download required libraries. 
 
 ### Database information
 
