@@ -7,7 +7,7 @@ Consists RESTful api implemented with Spring boot and Spring MVC. JDK 11. Gradle
 ## Instructions for running the application
 
 1. Run command prompt or (under windows) or open shell (under linux).
-2. Change current dirrectory to the "ms3test/management-rest-api".
+2. Change current directory to the "ms3test/management-rest-api".
 
 To run Junit tests - execute command 
 ```
