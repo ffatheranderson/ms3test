@@ -1,10 +1,10 @@
 # Management API
 
-Implementation of MS3 test task. Consists RESTful 
-api implemented with Spring boot and Spring MVC. JDK 11. Gradle 5.0
+Implementation of MS3 test task.
+Requirements for implementation can be found in the `ms3test\management-rest-api\Senior Coding Challenge API.docx` file.
+Consists RESTful api implemented with Spring boot and Spring MVC. JDK 11. Gradle 5.0
 
 ## Instructions for running the application
-
 
 1. Run command prompt or (under windows) or open shell (under linux).
 2. Change current dirrectory to the "ms3test/management-rest-api".
@@ -26,7 +26,8 @@ it will generate file
  ```
  ms3test\management-rest-api\build\libs\management-rest-api-0.0.1-SNAPSHOT.jar
  ```
- to run built application - change current directory to directory with `management-rest-api-0.0.1-SNAPSHOT.jar` file and execute command
+ to run built application - change current directory to directory with 
+ `management-rest-api-0.0.1-SNAPSHOT.jar` file and execute command
  ```
  java -jar management-rest-api-0.0.1-SNAPSHOT.jar
  ```
@@ -43,16 +44,20 @@ transfer-encoding: chunked
 date: Sun, 06 Jan 2019 05:11:09 GMT
 {"href": "http://localhost:8080/identifications"}
 ```
-and you should be able to browse this api by jumping between the links api provides you with in the responses.
+and you should be able to browse this api by jumping between the links api 
+provides you with in the responses.
 
 ### Prerequisites
 
 You have to have JRE (Java Runtime environment) installed(Tested with Open JDK 11). 
-And you have to have internet connection to let gradle to download required libraries. 
+Instructions on the JRE installation can be found at 
+[Java installation](https://java.com/en/download/help/download_options.xml)
+and you have to have internet connection to let gradle to download required libraries. 
 
 ### Database information
 
-Application was implemented with embedded HSQLDB, so you do not have to set up local database it will be run automatically with application start.
+Application was implemented with embedded HSQLDB, so you do not have to set up 
+local database it will be run automatically with application start.
 
 Below are SQL DDL for database creation generated automatically by JPA.
 
@@ -73,6 +78,19 @@ ms3test\management-rest-api\ER-Diagram.png
 ## Built With
 
 * [gradle](https://docs.gradle.org/current/userguide/userguide.html) - Gradle User Manual
+* [Java installation](https://java.com/en/download/help/download_options.xml)
+
+## Helpful resources used during the implementation
+
+[Http status codes](https://www.restapitutorial.com/httpstatuscodes.html) - description of return statuses for HTTP methods
+
+[HTTP Methods](https://restfulapi.net/http-methods/) - description of return statuses for HTTP methods
+
+[Building a Hypermedia-Driven RESTful Web Service](https://spring.io/guides/gs/rest-hateoas/) - manual on building and configuration of Hypermedia-Driven RESTful services with a Spring stack
+
+[Building REST services with Spring](https://spring.io/guides/tutorials/bookmarks/) - basic manual on building and configuration of RESTful services with a Spring stack
+
+[Customizing HTTP Endpoints in Spring Data REST](https://www.baeldung.com/spring-data-rest-customize-http-endpoints)
 
 ## Author
 
